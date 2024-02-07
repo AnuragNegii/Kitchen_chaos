@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SelectedCounterVisual : MonoBehaviour {
 
-    [SerializeField] private IKitchenObjectParent clearCounter;
+    [SerializeField] private ClearCounter clearCounter;
     [SerializeField] private GameObject visualGameObject;
 
     private void Start(){
