@@ -2,14 +2,18 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter {
 
-    [SerializeField] private KitchenObjectSO cutKitchenObjectSO;
+    [SerializeField] private CuttingRecipieSO[] cuttingRecipieSOArray;
     
     public override void Interact(Player player){
         if(!HasKitchenObject()){
             //There is no kitchen object
             if(player.HasKitchenObject()){
                 //player is carrying something
-                player.GetKitchenObject().SetKitchenObjectParent(this);
+                if(HasRecipieWithInput(player.GetKitchenObject().GetKitchenObjectSO()))
+                {
+                    //player carrying something that can be Cut
+                    player.GetKitchenObject().SetKitchenObjectParent(this);
+                }
             }else{
                 //Player not carrying anything
             }
@@ -25,12 +29,30 @@ public class CuttingCounter : BaseCounter {
     }
 
     public override void InteractAlternate(Player player){
-        if(HasKitchenObject()){
-            // there is a kitchen object here
+        if(HasKitchenObject() && HasRecipieWithInput(GetKitchenObject().GetKitchenObjectSO())){
+            // there is a kitchen object here and the object can be cut
+            KitchenObjectSO outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
             GetKitchenObject().DestroySelf();
 
-            KitchenObject.spawnKitchenObject(cutKitchenObjectSO, this);
+            KitchenObject.spawnKitchenObject(outputKitchenObjectSO, this);
 
         }
+    }
+
+    private bool HasRecipieWithInput(KitchenObjectSO inputKitchenObjectSO){
+        foreach (CuttingRecipieSO cuttingRecipieSO in cuttingRecipieSOArray){
+            if(inputKitchenObjectSO == cuttingRecipieSO.input){
+                return true;
+            }
+        }
+        return false;
+    }
+    private KitchenObjectSO GetOutputForInput(KitchenObjectSO inputKitchenObjectSO) {
+        foreach (CuttingRecipieSO cuttingRecipieSO in cuttingRecipieSOArray){
+            if(inputKitchenObjectSO == cuttingRecipieSO.input){
+                return cuttingRecipieSO.output;
+            }
+        }
+        return null;
     }
 }
