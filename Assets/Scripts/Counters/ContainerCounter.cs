@@ -11,7 +11,7 @@ public class ContainerCounter : BaseCounter {
      public override void Interact(Player player){
         if(!player.HasKitchenObject()){
             //Player is not carrying anything
-        KitchenObject.spawnKitchenObject(kitchenObjectSO, player);
+        KitchenObject.SpawnKitchenObject(kitchenObjectSO, player);
 
         OnPlayerGrabObject?.Invoke(this, EventArgs.Empty);
         }

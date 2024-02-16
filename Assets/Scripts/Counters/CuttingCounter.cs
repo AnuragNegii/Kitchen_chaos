@@ -2,12 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CuttingCounter : BaseCounter {
+public class CuttingCounter : BaseCounter, IHasProgress {
 
-    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
-    public class OnProgressChangedEventArgs : EventArgs{
-        public float progressNormalized;
-    }
+    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
+
 
     public event EventHandler OnCut;
     [SerializeField] private CuttingRecipieSO[] cuttingRecipieSOArray;
@@ -27,7 +25,7 @@ public class CuttingCounter : BaseCounter {
 
                     CuttingRecipieSO cuttingRecipieSO = GetCuttingRecipieSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
-                    OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{
+                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs{
                         progressNormalized = (float) cuttingProgress / cuttingRecipieSO.cuttingProgressMax
                     });
 
@@ -54,7 +52,7 @@ public class CuttingCounter : BaseCounter {
             
             CuttingRecipieSO cuttingRecipieSO = GetCuttingRecipieSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
-            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{
+            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs{
                     progressNormalized = (float) cuttingProgress / cuttingRecipieSO.cuttingProgressMax
             });
             OnCut?.Invoke(this, EventArgs.Empty);
@@ -63,7 +61,7 @@ public class CuttingCounter : BaseCounter {
                 KitchenObjectSO outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
                 GetKitchenObject().DestroySelf();
 
-                KitchenObject.spawnKitchenObject(outputKitchenObjectSO, this);
+                KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
 
 
             }
